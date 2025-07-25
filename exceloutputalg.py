@@ -222,6 +222,9 @@ def handlethevoids (G, theList1, theList2, node1, node1num, node2, node2num, nod
          if y[1] == node2num:
              node2sisters.append(y[0])
              
+    node1sisters = list(set(node1sisters))
+    node2sisters = list(set(node2sisters))
+    
     for q in node1sisters:
         for k in node2sisters:
             winnerlist.append(pullfrommatrix(G, q, k, node1desc, node2desc, matrix))
@@ -236,14 +239,14 @@ def mainfunction():
     innerlist = []
     matrix = []
    
-    # G = nx.connected_watts_strogatz_graph(graphsize, k, 0.2, tries=100, seed=None)
+    G = nx.connected_watts_strogatz_graph(graphsize, k, 0.2, tries=100, seed=None)
     # G = nx.erdos_renyi_graph(graphsize, k, directed=False)
-    G = nx.barabasi_albert_graph(graphsize, k, seed=None, initial_graph=None)
+    # G = nx.barabasi_albert_graph(graphsize, k, seed=None, initial_graph=None)
     
     while nx.is_connected(G) == False:
-        # G = nx.connected_watts_strogatz_graph(graphsize, k, 0.2, tries=100, seed=None)
+        G = nx.connected_watts_strogatz_graph(graphsize, k, 0.2, tries=100, seed=None)
         # G = nx.erdos_renyi_graph(graphsize, k, directed=False)
-        G = nx.barabasi_albert_graph(graphsize, k, seed=None, initial_graph=None)
+        # G = nx.barabasi_albert_graph(graphsize, k, seed=None, initial_graph=None)
         
     # MUST BE THE SAME GRAPH GENERATION TYPE HERE AS ABOVE
             
@@ -363,16 +366,16 @@ def main():
     
     pf = pd.DataFrame(d)
     print(d)
-    print ("Finished " + graphtype + k)  
-    with pd.ExcelWriter('GraphTestJuly23rd2025.xlsx', engine='openpyxl', mode='a', if_sheet_exists='overlay') as writer:
+    print ("Finished " + str(graphtype) + str(k))  
+    with pd.ExcelWriter('GraphTestJuly24th2025.xlsx', engine='openpyxl', mode='a', if_sheet_exists='overlay') as writer:
         wb = writer.book
         ws = wb.active
         pf.to_excel(writer, sheet_name= graphtype + str(k), index=False)
         
-graphtype = "PA"      
+graphtype = "WS"      
 graphsize = 50
 
-for k in [8,15,29,46]:
+for k in [10,25,39,47]:
     testper = [0] * 11
     main()
 
