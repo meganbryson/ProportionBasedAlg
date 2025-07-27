@@ -195,27 +195,37 @@ def runthealgmatrix(G, seed1, seed2):
              left = howmanyleft(G, adjlist, color_map)
              
          
-     
+     global algcount
      # nx.draw(G, node_color=color_map, with_labels=True)
      # plt.show()
      
      currentstats = percent(G, adjlist, color_map)
      
      if seed1 == seed2:
+        
          return -1
      elif currentstats[0] > currentstats[1]:
+         
          return seed1
      elif currentstats[1] > currentstats[0]:
+         
          return seed2
      else:   
          return -1   
  
 def handlethevoids (G, theList1, theList2, node1, node1num, node2, node2num, node1desc, node2desc, listnum1, listnum2, matrix ):
     node1sisters = [node1]
-    node2sisters = [node2]    
+    node2sisters = [node2]  
+    global testper
+    # print (theList1)
+    # print("target ", end = " ")
+    # print (str(node1) + "," + str(node1num))
     winnerlist = []
     for x in theList1:
+        
         if x[1] == node1num:
+            # print ("added: ", end = " ")
+            # print(str(x[0]) + "," + str(x[1]))
             node1sisters.append(x[0])
             
     for y in theList2:
@@ -224,13 +234,19 @@ def handlethevoids (G, theList1, theList2, node1, node1num, node2, node2num, nod
              
     node1sisters = list(set(node1sisters))
     node2sisters = list(set(node2sisters))
-    
+    # print("node1sisters:",end = " ")
+    # print(node1sisters)
+    newcount = 0
     for q in node1sisters:
         for k in node2sisters:
             winnerlist.append(pullfrommatrix(G, q, k, node1desc, node2desc, matrix))
+            newcount = newcount + 2
             testper[listnum1] += 1
             testper[listnum2] += 1
-    return winnerlist
+    # print("in handle voids ", end = " ")
+    # print (testper)
+    # print(newcount)
+    return winnerlist, testper
     
     
     
@@ -238,19 +254,23 @@ def mainfunction():
     G = nx.Graph()
     innerlist = []
     matrix = []
-   
-    G = nx.connected_watts_strogatz_graph(graphsize, k, 0.2, tries=100, seed=None)
+    global testper
+    # G = nx.connected_watts_strogatz_graph(graphsize, k, 0.2, tries=100, seed=None)
     # G = nx.erdos_renyi_graph(graphsize, k, directed=False)
-    # G = nx.barabasi_albert_graph(graphsize, k, seed=None, initial_graph=None)
+    G = nx.barabasi_albert_graph(graphsize, k, seed=None, initial_graph=None)
     
     while nx.is_connected(G) == False:
-        G = nx.connected_watts_strogatz_graph(graphsize, k, 0.2, tries=100, seed=None)
+        # G = nx.connected_watts_strogatz_graph(graphsize, k, 0.2, tries=100, seed=None)
         # G = nx.erdos_renyi_graph(graphsize, k, directed=False)
-        # G = nx.barabasi_albert_graph(graphsize, k, seed=None, initial_graph=None)
-        
+        G = nx.barabasi_albert_graph(graphsize, k, seed=None, initial_graph=None)
+    testper = [0] * 11
     # MUST BE THE SAME GRAPH GENERATION TYPE HERE AS ABOVE
-            
-                
+    # print ("starting test per: ", end = " ")
+    # print(testper)     
+    # pos = nx.spring_layout(G, seed = 100)
+    # nx.draw(G, pos=pos, with_labels=True)
+    
+    # plt.show()
     for i in range(graphsize):
         G.add_node(i)
     # nx.draw(G, with_labels=True)
@@ -324,35 +344,35 @@ def mainfunction():
     [ecclist, approxmiddleecc, mev, "approx middle ecc", 8],
     [clustlist, rand1, rv, "rand", 9]
     ]
-
+    
     # Do all pairwise comparisons (unique pairs only)
     winningtype = []
     for i in range(len(strategies)):
         for j in range(i + 1, len(strategies)):
             a = strategies[i]
             b = strategies[j]
-            result = handlethevoids(G, a[0], b[0], a[1], a[2], b[1], b[2], a[3], b[3], a[4], b[4], matrix)
+            result, testper= handlethevoids(G, a[0], b[0], a[1], a[2], b[1], b[2], a[3], b[3], a[4], b[4], matrix)
             winningtype.extend(result)
 
     # Prepare to collect win statistics
     winstats = []
-
     labels = [
     "lowest degree", "highest degree", "lowest clustering", "highest clustering",
     "approx middle degree", "approx middle clustering",
     "lowest ecc", "highest ecc", "approx middle ecc", "rand"
     ]
 
+    
     for i, label in enumerate(labels):
         count = winningtype.count(label)
-        # print(f"{label} wins:", end=" ")
-        # print(count)
         winstats.append(count / testper[i])
     
-    # print (Back.RED + "VOIDs:", end = " ")
-    # print (winningtype.count("VOID"))
     winstats.append(winningtype.count("VOID"))
-    # print(Style.RESET_ALL)
+    
+    # totaltests = sum(testper)
+    # decrease = round(((totaltests - 1125)/totaltests)*100)
+    # print ("for the graph, " + graphtype + "(" + str(graphsize) + "," + str(k) + "), we compared " + str(totaltests) + " measures. thanks to our storage matrix removing redundant computations, we only had to run the algorithm 1125 times. thats a ~" + str(decrease) + "% decrease in alg runs.")
+
     return winstats
 
 def main():
@@ -361,21 +381,24 @@ def main():
         
     for x in range (0,100):
         tallydata.append(mainfunction())
+        # print ("next test")
+        global testper
+        testper = [0] * 11
         d["test" + str(x)] =  [tallydata[x][0], tallydata[x][1], tallydata[x][2],tallydata[x][3],tallydata[x][4],tallydata[x][5],tallydata[x][6],tallydata[x][7],tallydata[x][8],tallydata[x][9], tallydata[x][10]]
                
     
     pf = pd.DataFrame(d)
-    print(d)
-    print ("Finished " + str(graphtype) + str(k))  
-    with pd.ExcelWriter('GraphTestJuly24th2025.xlsx', engine='openpyxl', mode='a', if_sheet_exists='overlay') as writer:
+    # print(d)
+    # print ("Finished " + str(graphtype) + str(k))  
+    with pd.ExcelWriter(file_path, engine='openpyxl', mode='a', if_sheet_exists='overlay') as writer:
         wb = writer.book
         ws = wb.active
         pf.to_excel(writer, sheet_name= graphtype + str(k), index=False)
-        
-graphtype = "WS"      
+file_path = 'July27th.xlsx'
+graphtype = "PA"      
 graphsize = 50
-
-for k in [10,25,39,47]:
-    testper = [0] * 11
+open(file_path, 'w').close()
+for k in [8,15,29,46]:
+    testper = [0] * 10
     main()
 
