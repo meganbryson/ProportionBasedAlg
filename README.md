@@ -2,7 +2,7 @@
 by megan bryson @ queens u
 
 python files:
-exceloutput runs the tests several times, single graph runs it once but displays the graph and lets the user pick the seed. 
+exceloutput runs the tests several times, single graph runs it once but displays the graph using the networkx plot and lets the user pick the seeds. 
 all py files require NetworkX (https://networkx.org/), the excel output one also requires Pandas (https://pandas.pydata.org/).
 
 for excel files:
