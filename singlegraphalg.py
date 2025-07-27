@@ -186,8 +186,8 @@ def percent(G, adjlist, color_map):
                
 def main():
     #G = nx.Graph()
-    graphsize = 15
-    G = nx.connected_watts_strogatz_graph(graphsize, 2, 0.2, tries=100, seed=None)
+    graphsize = 30
+    G = nx.connected_watts_strogatz_graph(graphsize, 4, 0.2, tries=100, seed=None)
     for i in range(graphsize):
         G.add_node(i)
   
@@ -209,7 +209,7 @@ def main():
     print (sorted(clustlist, key=lambda x: x[1], reverse=True)[len(clustlist)//2], end = " ")
     print ("(calculated with: sorted(clustlist, key=lambda x: x[1], reverse=True)[len(clustlist)//2])")
     
-    
+    print("\n")
     print ("\n~~~degrees of G~~~")
     degreelist = []
     for i in range(graphsize):
@@ -223,6 +223,20 @@ def main():
     print ("(calculated with: sorted(degreelist, key=lambda x: x[1], reverse=True)[len(degreelist)//2])")
     
 
+    print("\n")
+    print ("\n~~~eccentricity of G~~~")
+    el = nx.eccentricity(G)
+    ecclist = list(el.items())
+    print ("lowest ecc:", end = " ")
+    print (sorted(ecclist, key=lambda x: x[1], reverse=False)[0])
+    print ("highest ecc:", end = " ")
+    print (sorted(ecclist, key=lambda x: x[1], reverse=False)[-1])
+    print ("aprox middle degree:", end = " ")
+    print (sorted(ecclist, key=lambda x: x[1], reverse=True)[len(ecclist)//2], end = " ")
+    print ("(calculated with: sorted(ecclist, key=lambda x: x[1], reverse=True)[len(ecclist)//2])")
+    
+    
+    
     seed1 = input(Back.BLUE + '\nblue seed: ')
     seed2 = input (Back.RED + 'red seed: ')
     # seed3 = input(Back.BLUE + '\nblue seed 2: ')
