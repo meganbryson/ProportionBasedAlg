@@ -3,24 +3,24 @@
 
 def neighcolours(G, nodenum):
     #calculate the proportion of nodenum's neighbours that are blue, red and uncoloured
-    return x #the name and percent of the neighbour providing the    most influence on nodenum. if the nodenum is stalled or already  coloured, return this information instead
+    return x #the name and percent of the neighbour providing the most influence on nodenum. if the nodenum is stalled or already  coloured, return this information instead
     
 def findproportions(G):
-    return currentproplist #a list created using the function        neighcolours
+    return currentproplist #a list created using the function neighcolours
 
 def whosnext (G):
     #make a list of all current influence proportions
     currentprops = findproportions(G)
     
     for x in currentprops:
-        #find the uncoloured node with the most pressure to change.      in the event of a tie, select the one that appears earlier       in our ordered node list
+        #find the uncoloured node with the most pressure to change. in the event of a tie, select the one that appears earlier in our ordered node list
         
     if we found a viable node:
         #colour the node
     return
     
 def colournextstalled(G):
-    #colour the truly stalled node. even nodes become red, odd       become blue
+    #colour the truly stalled node. even nodes become red, odd become blue
     return
                
 def howmanyleft(G):  
@@ -32,22 +32,22 @@ def main():
     seed2 = chosen seed
     
     for node in G:
-        #colour seed nodes their assigned colour, leaving the rest       of the nodes uncoloured
+        #colour seed nodes their assigned colour, leaving the rest of the nodes uncoloured
 
     for every node in the graph minus the two that started coloured:
         #colour the next node
         whosnext (G)
 
-    #see how many are left uncoloured. if this is more than 0 this   would indicate a true stall case
+    #see how many are left uncoloured. if this is more than 0 this would indicate a true stall case
     left = howmanyleft(G)
 
-    #while there are uncoloured nodes not reached by the normal      algorithm run
+    #while there are uncoloured nodes not reached by the normal algorithm run
     while left != 0: 
         colournextstalled(G) 
         #recheck if there are still uncoloured nodes
         left = howmanyleft(G) 
 
-        #if there are, before colouring based on stallS,                 restart the colouring algorith If to see if fixing the           one stall rendered other previously stalled nodes                reachable 
+        #if there are, before colouring based on stallS, restart the colouring algorith If to see if fixing the one stall rendered other previously stalled nodes reachable 
         if left != 0:
             for node in range (left):
                 whosnext (G)
