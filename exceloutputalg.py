@@ -250,7 +250,7 @@ def handlethevoids (G, theList1, theList2, node1, node1num, node2, node2num, nod
     
     
     
-def mainfunction():
+def mainalg():
     G = nx.Graph()
     innerlist = []
     matrix = []
@@ -380,7 +380,7 @@ def main():
     d = {str(graphsize) + str(k): ['lowest degree wins:', 'highest degree wins:','lowest clustering wins:', "highest clustering wins:", "middle degree wins:", "middle clustering wins:", "lowest ecc wins:", "highest ecc wins:", "middle ecc wins:", "rand wins:", "VOIDs"]}
         
     for x in range (0,100):
-        tallydata.append(mainfunction())
+        tallydata.append(mainalg())
         # print ("next test")
         global testper
         testper = [0] * 11
@@ -401,4 +401,5 @@ open(file_path, 'w').close()
 for k in [8,15,29,46]:
     testper = [0] * 10
     main()
+
 
